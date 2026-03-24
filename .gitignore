@@ -34,8 +34,17 @@ testem.log
 typings
 __screenshots__/
 
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+db.sqlite3
+media/
+
 # System files
 .DS_Store
 Thumbs.db
 
+# Angular
 .angular
