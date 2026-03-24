@@ -4,7 +4,7 @@ Theme : Ne pridumali
 
 ## Group Members
 
-- Sabina
-- Rasul
-- Yusuf
+- Kanatkyzy Sabina
+- Kerimzhanov Rasul
+- Smailov Yussuf
 
