@@ -13,6 +13,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Third party
     'rest_framework',
+    'drf_spectacular',
     'corsheaders',
     # Local
     'apps.accounts',
@@ -74,6 +75,12 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Cafe Booking API',
+    'VERSION': '1.0.0',
 }
 
 from datetime import timedelta
