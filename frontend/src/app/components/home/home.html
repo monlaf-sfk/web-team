@@ -1,0 +1,37 @@
+<div class="home">
+<p class="home-quote">Discover your perfect spot - browse, explore, and reserve your table in moments.</p>
+
+<!-- section with categories -->
+    <section class="categories-section">
+            <div class="categories-list">
+                @for (category of categories; track category.id) {
+                    <button
+                    class="category-btn"
+                    [class.selected]="selectedCategory === category.id"
+                    (click)="filterByCategory(category.id)">
+                    {{ category.name }}
+                    </button>
+                }
+            </div>
+    </section>
+
+<!-- section with cafes -->
+    <section class="cafes-section">
+        <div class="cafes-grid">            @for (cafe of filteredCafes; track cafe.id) {
+                <div class="cafe-card">
+                <img [src]="cafe.image" [alt]="cafe.name" class="cafe-image" />
+                <div class="cafe-info">
+                    <h3>{{ cafe.name }}</h3>
+                    <p class="cafe-address"> {{ cafe.address }}</p>
+                    <p class="cafe-description">{{ cafe.description }}</p>
+                    <a [routerLink]="['/cafe', cafe.id]" class="view-btn">View Menu & Book</a>
+                </div>
+                </div>
+            } @empty {
+                <p class="no-cafes">No cafés found in this category.</p>
+            }
+        </div>
+  </section>
+
+</div>
+

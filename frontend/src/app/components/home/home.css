@@ -1,0 +1,131 @@
+.home {
+    padding: 32px;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: 'Comfortaa';
+}
+
+/* CATEGORIES */
+.home-quote {
+    text-align: center;
+    font-size: 14px;
+    color: var(--accent);
+    margin-bottom: 25px;
+    font-style: italic;
+}
+
+.categories-section {
+    margin-bottom: 40px;
+}
+
+
+.categories-list {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.category-btn {
+    padding: 15px 24px;
+    border: 2px solid var(--dark_accent);
+    background: transparent;
+    color: var(--dark_accent);
+    border-radius: 24px;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: 'Comfortaa';
+    transition: all 0.2s ease;
+}
+
+.category-btn:hover {
+    background: var(--dark_accent);
+    color: var(--primary);
+}
+
+.category-btn.selected {
+    background: var(--dark_accent);
+    color: var(--primary);
+}
+
+
+/* CAFES */
+.cafes-section h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: var(--dark_accent);
+}
+
+.cafes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+.cafe-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(121, 74, 58, 0.15);
+    transition: transform 0.2s ease;
+    border-bottom: 4px solid var(--dark_accent);
+}
+
+.cafe-card:hover {
+    transform: translateY(-4px);
+}
+
+.cafe-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.cafe-info {
+    padding: 16px;
+}
+
+.cafe-info h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+    color: var(--dark_accent);
+}
+
+.cafe-address {
+    font-size: 13px;
+    color: var(--accent2);
+    margin-bottom: 8px;
+}
+
+.cafe-description {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 16px;
+    background: var(--primary);
+    padding: 8px 12px;
+    border-radius: 8px;
+    box-shadow: inset 2px 2px 5px rgba(121, 74, 58, 0.315);
+    border-left: 3px solid var(--dark_accent);
+}
+
+
+.view-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background: linear-gradient(to right, var(--accent), var(--accent2));
+    color: var(--primary);
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 14px;
+    font-family: 'Comfortaa';
+    transition: opacity 0.2s ease;
+}
+
+.view-btn:hover {
+    opacity: 0.85;
+}
+
+.no-cafes {
+    color: var(--accent2);
+    font-size: 16px;
+}

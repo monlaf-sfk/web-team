@@ -1,0 +1,48 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Comfortaa';
+    padding: 16px 32px;
+    background: linear-gradient(to bottom, var(--accent), var(--accent2));
+    border-bottom: 3px solid var(--dark_accent);
+}
+
+.brand-logo {
+    height: 55px;
+    width: 55px;
+    object-fit: contain;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.navbar-brand a {
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 35px;
+}
+
+.navbar-links {
+    display: flex;
+    gap: 20px;
+}
+
+.navbar-links a {
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 15px;
+    transition: transform 0.2s ease;
+}
+
+.navbar-links a.active {
+    border-bottom: 1.5px solid var(--dark_accent);
+    transform: scale(1.1);
+}
+
+.navbar-links a:hover {
+    transform: scale(1.1);
+}

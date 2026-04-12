@@ -1,1 +1,24 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+    --primary: #fff2d9;
+    --primary2: #f8f7d3;
+    --accent: #367a70;
+    --accent2: #afb286;
+    --dark_accent: #794a3a;
+
+
+}
+
+@font-face {
+    font-family: 'Comfortaa';
+    src: url(assets/fonts/comfortaa.woff) format('woff');
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background: linear-gradient(to bottom, var(--primary), var(--primary2));
+}
