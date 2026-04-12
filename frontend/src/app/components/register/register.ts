@@ -7,12 +7,12 @@ import { AuthService } from '../../services/auth';
 import { extractErrors } from '../../utils/errors';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-register',
   imports: [FormsModule, RouterLink],
-  templateUrl: './login.html',
-  styleUrl: './login.css',
+  templateUrl: './register.html',
+  styleUrl: './register.css',
 })
-export class Login {
+export class Register {
   private auth = inject(AuthService);
   private router = inject(Router);
 
@@ -22,23 +22,27 @@ export class Login {
   submitting = signal<boolean>(false);
 
   submit(): void {
-    if (!this.username || !this.password) {
-      this.errors.set({ detail: 'Username and password are required.' });
+    if (!this.username || this.password.length < 6) {
+      this.errors.set({ detail: 'Username required, password min 6 chars.' });
       return;
     }
     this.submitting.set(true);
     this.errors.set({});
-    this.auth.login(this.username, this.password).subscribe({
+    this.auth.register(this.username, this.password).subscribe({
       next: () => {
-        this.submitting.set(false);
-        this.router.navigate(['/']);
+        this.auth.login(this.username, this.password).subscribe({
+          next: () => {
+            this.submitting.set(false);
+            this.router.navigate(['/']);
+          },
+          error: () => {
+            this.submitting.set(false);
+            this.router.navigate(['/login']);
+          },
+        });
       },
       error: (err: HttpErrorResponse) => {
-        const parsed = extractErrors(err);
-        if (err.status === 401) {
-          parsed['detail'] = 'Invalid username or password.';
-        }
-        this.errors.set(parsed);
+        this.errors.set(extractErrors(err));
         this.submitting.set(false);
       },
     });
