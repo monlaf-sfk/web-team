@@ -1,0 +1,27 @@
+<div class="favorites">
+  <h1>Favorites</h1>
+  @if (loading()) {
+    <p class="loading">Loading...</p>
+  } @else if (error()) {
+    <p class="error">{{ error() }}</p>
+  } @else {
+    <div class="cafes-grid">
+      @for (cafe of list(); track cafe.id) {
+        <div class="cafe-card">
+          <img [src]="cafe.image" [alt]="cafe.name" class="cafe-image" />
+          <div class="cafe-info">
+            <h3>{{ cafe.name }}</h3>
+            <p class="cafe-address">{{ cafe.address }}</p>
+            <p class="cafe-description">{{ cafe.description }}</p>
+            <div class="actions">
+              <a [routerLink]="['/cafe', cafe.id]" class="view-btn">View Menu</a>
+              <button class="remove-btn" (click)="remove(cafe.id)" title="Remove from favorites">♥</button>
+            </div>
+          </div>
+        </div>
+      } @empty {
+        <p class="empty">No favorites yet. Tap ♡ on any cafe to add.</p>
+      }
+    </div>
+  }
+</div>
