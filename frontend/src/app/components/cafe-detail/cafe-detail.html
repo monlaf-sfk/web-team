@@ -1,1 +1,141 @@
-<p>cafe-detail works!</p>
+<div class="cafe-detail">
+  @if (loading()) {
+    <p class="loading">Loading...</p>
+  } @else if (error()) {
+    <p class="error">{{ error() }}</p>
+  } @else if (cafe(); as c) {
+    <section class="hero">
+      <div class="hero-image-wrap">
+        <img [src]="c.image" [alt]="c.name" class="hero-image" />
+        <button
+          class="fav-btn"
+          [class.active]="favorites.has(c.id)"
+          (click)="toggleFav()"
+          title="Toggle favorite">
+          {{ favorites.has(c.id) ? '♥' : '♡' }}
+        </button>
+        <span class="status-badge" [class.closed]="!isOpen()">
+          {{ isOpen() ? 'Open now' : 'Closed' }}
+        </span>
+      </div>
+      <div class="hero-info">
+        <div class="title-row">
+          <h1>{{ c.name }}</h1>
+          @if (c.avg_rating !== null) {
+            <span class="rating">★ {{ c.avg_rating }} <small>({{ c.reviews_count }})</small></span>
+          }
+        </div>
+        <p class="category">{{ c.category.name }}</p>
+        <p class="address">{{ c.address }}</p>
+        <p class="hours">Open: {{ c.opens_at.substring(0,5) }} – {{ c.closes_at.substring(0,5) }}</p>
+        <p class="description">{{ c.description }}</p>
+      </div>
+    </section>
+
+    <section class="menu-section">
+      <h2>Menu</h2>
+      <ul class="menu-list">
+        @for (item of menu(); track item.id) {
+          <li class="menu-item">
+            <span class="item-name">{{ item.name }}</span>
+            <span class="item-price">{{ item.price }} ₸</span>
+          </li>
+        } @empty {
+          <li>No menu items yet.</li>
+        }
+      </ul>
+    </section>
+
+    <section class="booking-section">
+      <h2>Book a Table</h2>
+      @if (!auth.isAuthenticated()) {
+        <p class="hint">Please <a routerLink="/login">log in</a> to book.</p>
+      }
+      <form (ngSubmit)="book()" #f="ngForm" class="booking-form">
+        <label>
+          Date
+          <input type="date" name="date" [(ngModel)]="date" required />
+          @if (bookingErrors()['date']) {
+            <span class="field-error">{{ bookingErrors()['date'] }}</span>
+          }
+        </label>
+        <label>
+          Time
+          <input type="time" name="time" [(ngModel)]="time" required />
+          @if (bookingErrors()['time']) {
+            <span class="field-error">{{ bookingErrors()['time'] }}</span>
+          }
+        </label>
+        <label>
+          Guests
+          <input type="number" name="guests" min="1" max="20" [(ngModel)]="guests" required />
+          @if (bookingErrors()['guests']) {
+            <span class="field-error">{{ bookingErrors()['guests'] }}</span>
+          }
+        </label>
+        <button type="submit" [disabled]="submitting()">
+          {{ submitting() ? 'Booking...' : 'Book Table' }}
+        </button>
+      </form>
+      @if (successMessage()) {
+        <p class="success">{{ successMessage() }}</p>
+      }
+      @if (bookingErrors()['detail']) {
+        <p class="error">{{ bookingErrors()['detail'] }}</p>
+      }
+    </section>
+
+    <section class="reviews-section">
+      <h2>Reviews</h2>
+      @if (auth.isAuthenticated()) {
+        <form (ngSubmit)="submitReview()" class="review-form">
+          <label>
+            Rating
+            <select name="rating" [(ngModel)]="reviewRating">
+              <option [value]="5">★★★★★</option>
+              <option [value]="4">★★★★</option>
+              <option [value]="3">★★★</option>
+              <option [value]="2">★★</option>
+              <option [value]="1">★</option>
+            </select>
+          </label>
+          <label class="text-label">
+            Comment
+            <textarea name="text" rows="3" [(ngModel)]="reviewText" placeholder="Your impression..."></textarea>
+          </label>
+          <button type="submit" [disabled]="submittingReview()">
+            {{ submittingReview() ? 'Sending...' : 'Post Review' }}
+          </button>
+        </form>
+        @if (reviewSuccess()) {
+          <p class="success">{{ reviewSuccess() }}</p>
+        }
+        @if (reviewErrors()['detail']) {
+          <p class="error">{{ reviewErrors()['detail'] }}</p>
+        }
+        @if (reviewErrors()['rating']) {
+          <p class="error">Rating: {{ reviewErrors()['rating'] }}</p>
+        }
+      } @else {
+        <p class="hint">Please <a routerLink="/login">log in</a> to leave a review.</p>
+      }
+
+      <ul class="review-list">
+        @for (r of reviews(); track r.id) {
+          <li class="review-card">
+            <div class="review-head">
+              <strong>{{ r.username }}</strong>
+              <span class="review-stars">{{ '★'.repeat(r.rating) }}{{ '☆'.repeat(5 - r.rating) }}</span>
+            </div>
+            @if (r.text) {
+              <p class="review-text">{{ r.text }}</p>
+            }
+            <p class="review-date">{{ r.created_at.substring(0, 10) }}</p>
+          </li>
+        } @empty {
+          <p class="empty">No reviews yet. Be the first!</p>
+        }
+      </ul>
+    </section>
+  }
+</div>
