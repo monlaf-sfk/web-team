@@ -1,37 +1,72 @@
 <div class="home">
-<p class="home-quote">Discover your perfect spot - browse, explore, and reserve your table in moments.</p>
+  <p class="home-quote">Discover your perfect spot - browse, explore, and reserve your table in moments.</p>
 
-<!-- section with categories -->
-    <section class="categories-section">
-            <div class="categories-list">
-                @for (category of categories; track category.id) {
-                    <button
-                    class="category-btn"
-                    [class.selected]="selectedCategory === category.id"
-                    (click)="filterByCategory(category.id)">
-                    {{ category.name }}
-                    </button>
-                }
-            </div>
-    </section>
-
-<!-- section with cafes -->
-    <section class="cafes-section">
-        <div class="cafes-grid">            @for (cafe of filteredCafes; track cafe.id) {
-                <div class="cafe-card">
-                <img [src]="cafe.image" [alt]="cafe.name" class="cafe-image" />
-                <div class="cafe-info">
-                    <h3>{{ cafe.name }}</h3>
-                    <p class="cafe-address"> {{ cafe.address }}</p>
-                    <p class="cafe-description">{{ cafe.description }}</p>
-                    <a [routerLink]="['/cafe', cafe.id]" class="view-btn">View Menu & Book</a>
-                </div>
-                </div>
-            } @empty {
-                <p class="no-cafes">No cafés found in this category.</p>
-            }
-        </div>
+  <section class="controls">
+    <input
+      type="text"
+      class="search-input"
+      placeholder="Search cafes..."
+      [(ngModel)]="search"
+      (input)="onSearchChange()"
+    />
+    <select class="sort-select" [(ngModel)]="ordering" (change)="onOrderingChange()">
+      <option value="">Sort: default</option>
+      <option value="name">Name A-Z</option>
+      <option value="-avg_rating">Top rated</option>
+    </select>
   </section>
 
-</div>
+  <section class="categories-section">
+    <div class="categories-list">
+      @for (category of categories(); track category.id) {
+        <button
+          class="category-btn"
+          [class.selected]="selectedCategory === category.id"
+          (click)="filterByCategory(category.id)">
+          {{ category.name }}
+        </button>
+      }
+    </div>
+  </section>
 
+  <section class="cafes-section">
+    @if (loading()) {
+      <p class="loading">Loading...</p>
+    } @else if (error()) {
+      <p class="error">{{ error() }}</p>
+    } @else {
+      <div class="cafes-grid">
+        @for (cafe of cafes(); track cafe.id) {
+          <div class="cafe-card">
+            <div class="cafe-image-wrap">
+              <img [src]="cafe.image" [alt]="cafe.name" class="cafe-image" />
+              <button
+                class="fav-btn"
+                [class.active]="favorites.has(cafe.id)"
+                (click)="toggleFavorite(cafe.id, $event)"
+                title="Toggle favorite">
+                {{ favorites.has(cafe.id) ? '♥' : '♡' }}
+              </button>
+              <span class="status-badge" [class.closed]="!isOpen(cafe)">
+                {{ isOpen(cafe) ? 'Open now' : 'Closed' }}
+              </span>
+            </div>
+            <div class="cafe-info">
+              <div class="cafe-header">
+                <h3>{{ cafe.name }}</h3>
+                @if (cafe.avg_rating !== null) {
+                  <span class="rating">★ {{ cafe.avg_rating }} <small>({{ cafe.reviews_count }})</small></span>
+                }
+              </div>
+              <p class="cafe-address">{{ cafe.address }}</p>
+              <p class="cafe-description">{{ cafe.description }}</p>
+              <a [routerLink]="['/cafe', cafe.id]" class="view-btn">View Menu & Book</a>
+            </div>
+          </div>
+        } @empty {
+          <p class="no-cafes">No cafés found.</p>
+        }
+      </div>
+    }
+  </section>
+</div>

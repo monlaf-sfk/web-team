@@ -1,38 +1,75 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+
 import { CafeService } from '../../services/cafe';
-import { Category, Cafe } from '../../models/cafe';
+import { FavoritesService } from '../../services/favorites';
+import { Cafe, Category } from '../../models/cafe';
+import { isCafeOpenNow } from '../../utils/open-now';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink],
+  imports: [RouterLink, FormsModule],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
-
 export class Home implements OnInit {
   private cafeService = inject(CafeService);
+  protected favorites = inject(FavoritesService);
 
-  categories: Category[] = [];
-  cafes: Cafe[] = [];
-  filteredCafes: Cafe[] = [];
+  categories = signal<Category[]>([]);
+  cafes = signal<Cafe[]>([]);
+  loading = signal<boolean>(true);
+  error = signal<string>('');
+
   selectedCategory: number | null = null;
+  search = '';
+  ordering: '' | '-avg_rating' | 'name' = '';
 
   ngOnInit(): void {
-    this.categories = this.cafeService.getCategories();
-    this.cafes = this.cafeService.getCafes();
-    this.filteredCafes = this.cafes;
+    this.cafeService.getCategories().subscribe({
+      next: data => this.categories.set(data),
+      error: () => this.error.set('Failed to load categories.'),
+    });
+    this.loadCafes();
   }
 
   filterByCategory(categoryId: number): void {
-    if(this.selectedCategory === categoryId) {
-      this.selectedCategory = null;
-      this.filteredCafes = this.cafes;
-    }
-    else{
-      this.selectedCategory = categoryId;
-      this.filteredCafes = this.cafes.filter(cafe => cafe.category.id === categoryId);
-    }
+    this.selectedCategory = this.selectedCategory === categoryId ? null : categoryId;
+    this.loadCafes();
   }
 
+  onSearchChange(): void {
+    this.loadCafes();
+  }
+
+  onOrderingChange(): void {
+    this.loadCafes();
+  }
+
+  toggleFavorite(id: number, event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.favorites.toggle(id);
+  }
+
+  isOpen(cafe: Cafe): boolean {
+    return isCafeOpenNow(cafe.opens_at, cafe.closes_at);
+  }
+
+  private loadCafes(): void {
+    this.loading.set(true);
+    this.cafeService
+      .getCafes(this.selectedCategory, this.search.trim(), this.ordering || undefined)
+      .subscribe({
+        next: data => {
+          this.cafes.set(data);
+          this.loading.set(false);
+        },
+        error: () => {
+          this.error.set('Failed to load cafes.');
+          this.loading.set(false);
+        },
+      });
+  }
 }
