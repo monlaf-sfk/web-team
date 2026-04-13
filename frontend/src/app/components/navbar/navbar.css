@@ -46,3 +46,20 @@
 .navbar-links a:hover {
     transform: scale(1.1);
 }
+
+.logout-btn {
+    background: transparent;
+    border: 1.5px solid var(--primary);
+    color: var(--primary);
+    font-family: 'Comfortaa';
+    font-size: 14px;
+    padding: 4px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.logout-btn:hover {
+    background: var(--primary);
+    color: var(--accent);
+}
