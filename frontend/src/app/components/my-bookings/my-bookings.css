@@ -1,0 +1,83 @@
+.bookings {
+    padding: 32px;
+    max-width: 800px;
+    margin: 0 auto;
+    font-family: 'Comfortaa';
+    color: var(--dark_accent);
+}
+
+.bookings h1 {
+    font-size: 28px;
+    margin-bottom: 24px;
+}
+
+.loading,
+.error,
+.empty {
+    text-align: center;
+    padding: 24px 0;
+    color: var(--accent2);
+}
+
+.error {
+    color: #b04a3a;
+}
+
+.bookings-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.booking-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    border-radius: 12px;
+    padding: 18px 22px;
+    box-shadow: 0 2px 12px rgba(121, 74, 58, 0.15);
+    border-left: 4px solid var(--accent);
+}
+
+.booking-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.cafe-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--dark_accent);
+    text-decoration: none;
+}
+
+.cafe-name:hover {
+    color: var(--accent);
+}
+
+.booking-meta {
+    font-size: 14px;
+    color: var(--accent2);
+}
+
+.cancel-btn {
+    padding: 8px 16px;
+    background: transparent;
+    color: #b04a3a;
+    border: 2px solid #b04a3a;
+    border-radius: 8px;
+    font-family: 'Comfortaa';
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cancel-btn:hover {
+    background: #b04a3a;
+    color: var(--primary);
+}

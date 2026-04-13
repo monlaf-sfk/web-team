@@ -1,1 +1,22 @@
-<p>my-bookings works!</p>
+<div class="bookings">
+  <h1>My Bookings</h1>
+  @if (loading()) {
+    <p class="loading">Loading...</p>
+  } @else if (error()) {
+    <p class="error">{{ error() }}</p>
+  } @else {
+    <ul class="bookings-list">
+      @for (b of bookings(); track b.id) {
+        <li class="booking-card">
+          <div class="booking-info">
+            <a [routerLink]="['/cafe', b.cafe]" class="cafe-name">{{ b.cafe_name }}</a>
+            <p class="booking-meta">{{ b.date }} at {{ b.time.substring(0, 5) }} — {{ b.guests }} guest(s)</p>
+          </div>
+          <button class="cancel-btn" (click)="cancel(b.id)">Cancel</button>
+        </li>
+      } @empty {
+        <p class="empty">You have no bookings yet.</p>
+      }
+    </ul>
+  }
+</div>
