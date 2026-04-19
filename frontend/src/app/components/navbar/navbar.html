@@ -8,6 +8,7 @@
     <a routerLink="/favorites" routerLinkActive="active">Favorites</a>
     @if (auth.isAuthenticated()) {
       <a routerLink="/my-bookings" routerLinkActive="active">My Bookings</a>
+      <a routerLink="/badges" routerLinkActive="active">Badges</a>
       <button class="logout-btn" (click)="logout()">Logout</button>
     } @else {
       <a routerLink="/login" routerLinkActive="active">Login</a>

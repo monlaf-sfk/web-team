@@ -1,0 +1,44 @@
+<div class="badges-page">
+  @if (loading()) {
+    <p class="loading">Loading...</p>
+  } @else if (error()) {
+    <p class="error">{{ error() }}</p>
+  } @else if (data(); as d) {
+    <section class="level-card">
+      <div class="level-header">
+        <div>
+          <h2>Level {{ d.level }}</h2>
+          <p class="level-user">{{ d.username }}</p>
+        </div>
+        <div class="xp-badge">{{ d.xp }} XP</div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="progressPercent()"></div>
+      </div>
+      <p class="level-meta">
+        {{ d.earned_count }} / {{ d.total_count }} badges earned ·
+        {{ d.reservations }} reservations · {{ d.reviews }} reviews
+      </p>
+    </section>
+
+    <h3 class="badges-title">Badges</h3>
+    <div class="badges-grid">
+      @for (b of d.badges; track b.slug) {
+        <div class="badge-card" [class.earned]="b.earned" [class.locked]="!b.earned">
+          <div class="badge-emoji">{{ b.emoji }}</div>
+          <h4 class="badge-name">{{ b.name }}</h4>
+          <p class="badge-desc">{{ b.description }}</p>
+          <div class="badge-progress">
+            <div class="badge-progress-bar">
+              <div class="badge-progress-fill" [style.width.%]="badgeProgress(b.earned, b.progress, b.threshold)"></div>
+            </div>
+            <span class="badge-progress-text">{{ b.progress }} / {{ b.threshold }}</span>
+          </div>
+          @if (b.earned) {
+            <span class="earned-tag">Earned ✓</span>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

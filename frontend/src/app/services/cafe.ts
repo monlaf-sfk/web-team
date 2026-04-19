@@ -3,7 +3,16 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { Cafe, Category, MenuItem, Paginated, Review } from '../models/cafe';
+import {
+  Cafe,
+  CafeBusyness,
+  Category,
+  MenuItem,
+  Mood,
+  MyBadges,
+  Paginated,
+  Review,
+} from '../models/cafe';
 
 const API = 'http://localhost:8000/api';
 
@@ -22,7 +31,16 @@ export class CafeService {
       .pipe(map(res => res.results));
   }
 
-  getCafes(categoryId?: number | null, search?: string, ordering?: string): Observable<Cafe[]> {
+  getMoods(): Observable<Mood[]> {
+    return this.http.get<Mood[]>(`${API}/moods/`);
+  }
+
+  getCafes(
+    categoryId?: number | null,
+    search?: string,
+    ordering?: string,
+    moodSlugs?: string[],
+  ): Observable<Cafe[]> {
     let params = new HttpParams();
     if (categoryId) {
       params = params.set('category', categoryId);
@@ -32,6 +50,9 @@ export class CafeService {
     }
     if (ordering) {
       params = params.set('ordering', ordering);
+    }
+    if (moodSlugs && moodSlugs.length) {
+      params = params.set('moods', moodSlugs.join(','));
     }
     return this.http
       .get<Paginated<Cafe>>(`${API}/cafes/`, { params })
@@ -63,5 +84,13 @@ export class CafeService {
 
   addReview(cafeId: number, data: NewReview): Observable<Review> {
     return this.http.post<Review>(`${API}/cafes/${cafeId}/reviews/`, data);
+  }
+
+  getBusyness(cafeId: number): Observable<CafeBusyness> {
+    return this.http.get<CafeBusyness>(`${API}/cafes/${cafeId}/busyness/`);
+  }
+
+  getMyBadges(): Observable<MyBadges> {
+    return this.http.get<MyBadges>(`${API}/me/badges/`);
   }
 }

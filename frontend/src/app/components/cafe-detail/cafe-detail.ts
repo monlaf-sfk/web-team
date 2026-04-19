@@ -7,7 +7,7 @@ import { AuthService } from '../../services/auth';
 import { CafeService } from '../../services/cafe';
 import { FavoritesService } from '../../services/favorites';
 import { ReservationService } from '../../services/reservation';
-import { Cafe, MenuItem, Review } from '../../models/cafe';
+import { Cafe, CafeBusyness, MenuItem, Review } from '../../models/cafe';
 import { extractErrors } from '../../utils/errors';
 import { isCafeOpenNow } from '../../utils/open-now';
 
@@ -28,6 +28,7 @@ export class CafeDetail implements OnInit {
   cafe = signal<Cafe | null>(null);
   menu = signal<MenuItem[]>([]);
   reviews = signal<Review[]>([]);
+  busyness = signal<CafeBusyness | null>(null);
   loading = signal<boolean>(true);
   error = signal<string>('');
 
@@ -67,6 +68,17 @@ export class CafeDetail implements OnInit {
       },
     });
     this.loadReviews(id);
+    this.cafeService.getBusyness(id).subscribe({
+      next: b => this.busyness.set(b),
+      error: () => {},
+    });
+  }
+
+  busynessLabel(level: string): string {
+    if (level === 'high') return 'Busy';
+    if (level === 'medium') return 'Moderately busy';
+    if (level === 'low') return 'A little busy';
+    return 'Not busy';
   }
 
   isOpen(): boolean {

@@ -1,0 +1,337 @@
+{
+  "info": {
+    "name": "Cafe API",
+    "description": "Cafe reservation & review API (Django + DRF + SimpleJWT)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8000/api" },
+    { "key": "access", "value": "" },
+    { "key": "refresh", "value": "" },
+    { "key": "cafeId", "value": "1" },
+    { "key": "categoryId", "value": "1" },
+    { "key": "menuItemId", "value": "1" },
+    { "key": "reservationId", "value": "1" },
+    { "key": "reviewId", "value": "1" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/register/", "host": ["{{baseUrl}}"], "path": ["register", ""] },
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"demo\",\n  \"password\": \"demo12345\"\n}" }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "body": "{\n  \"id\": 1,\n  \"username\": \"demo\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Login (APIView)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/login/", "host": ["{{baseUrl}}"], "path": ["login", ""] },
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"demo\",\n  \"password\": \"demo12345\"\n}" }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.collectionVariables.set('access', json.access);",
+                  "pm.collectionVariables.set('refresh', json.refresh);"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"access\": \"<jwt>\",\n  \"refresh\": \"<jwt>\",\n  \"username\": \"demo\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Token (SimpleJWT)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/token/", "host": ["{{baseUrl}}"], "path": ["token", ""] },
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"demo\",\n  \"password\": \"demo12345\"\n}" }
+          }
+        },
+        {
+          "name": "Token Refresh",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/token/refresh/", "host": ["{{baseUrl}}"], "path": ["token", "refresh", ""] },
+            "body": { "mode": "raw", "raw": "{\n  \"refresh\": \"{{refresh}}\"\n}" }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/logout/", "host": ["{{baseUrl}}"], "path": ["logout", ""] },
+            "body": { "mode": "raw", "raw": "{\n  \"refresh\": \"{{refresh}}\"\n}" }
+          },
+          "response": [
+            { "name": "205 Reset Content", "status": "Reset Content", "code": 205, "body": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "List",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/categories/", "host": ["{{baseUrl}}"], "path": ["categories", ""] }
+          }
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/categories/", "host": ["{{baseUrl}}"], "path": ["categories", ""] },
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Coffee\"\n}" }
+          }
+        },
+        {
+          "name": "Retrieve",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/categories/{{categoryId}}/", "host": ["{{baseUrl}}"], "path": ["categories", "{{categoryId}}", ""] }
+          }
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/categories/{{categoryId}}/", "host": ["{{baseUrl}}"], "path": ["categories", "{{categoryId}}", ""] },
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Specialty Coffee\"\n}" }
+          }
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/categories/{{categoryId}}/", "host": ["{{baseUrl}}"], "path": ["categories", "{{categoryId}}", ""] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cafes",
+      "item": [
+        {
+          "name": "List",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/cafes/?search=",
+              "host": ["{{baseUrl}}"],
+              "path": ["cafes", ""],
+              "query": [{ "key": "search", "value": "" }]
+            }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"count\": 1,\n  \"results\": [\n    {\n      \"id\": 1,\n      \"name\": \"Starbucks\",\n      \"address\": \"Dostyk 5\",\n      \"avg_rating\": 4.5,\n      \"reviews_count\": 2\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/cafes/", "host": ["{{baseUrl}}"], "path": ["cafes", ""] },
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"New Cafe\",\n  \"address\": \"Abay 10\",\n  \"description\": \"Cozy spot\",\n  \"image\": \"https://example.com/img.jpg\",\n  \"category_id\": 1,\n  \"opens_at\": \"09:00\",\n  \"closes_at\": \"22:00\"\n}" }
+          }
+        },
+        {
+          "name": "Retrieve",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/cafes/{{cafeId}}/", "host": ["{{baseUrl}}"], "path": ["cafes", "{{cafeId}}", ""] }
+          }
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/cafes/{{cafeId}}/", "host": ["{{baseUrl}}"], "path": ["cafes", "{{cafeId}}", ""] },
+            "body": { "mode": "raw", "raw": "{\n  \"description\": \"Updated description\"\n}" }
+          }
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/cafes/{{cafeId}}/", "host": ["{{baseUrl}}"], "path": ["cafes", "{{cafeId}}", ""] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Menu Items",
+      "item": [
+        {
+          "name": "List",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/menu-items/?cafe={{cafeId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["menu-items", ""],
+              "query": [{ "key": "cafe", "value": "{{cafeId}}" }]
+            }
+          }
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/menu-items/", "host": ["{{baseUrl}}"], "path": ["menu-items", ""] },
+            "body": { "mode": "raw", "raw": "{\n  \"cafe\": {{cafeId}},\n  \"name\": \"Latte\",\n  \"price\": 1500\n}" }
+          }
+        },
+        {
+          "name": "Retrieve",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/menu-items/{{menuItemId}}/", "host": ["{{baseUrl}}"], "path": ["menu-items", "{{menuItemId}}", ""] }
+          }
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/menu-items/{{menuItemId}}/", "host": ["{{baseUrl}}"], "path": ["menu-items", "{{menuItemId}}", ""] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reservations",
+      "item": [
+        {
+          "name": "List (mine)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access}}" }],
+            "url": { "raw": "{{baseUrl}}/reservations/", "host": ["{{baseUrl}}"], "path": ["reservations", ""] }
+          }
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{baseUrl}}/reservations/", "host": ["{{baseUrl}}"], "path": ["reservations", ""] },
+            "body": { "mode": "raw", "raw": "{\n  \"cafe\": {{cafeId}},\n  \"date\": \"2026-05-01\",\n  \"time\": \"19:00\",\n  \"guests\": 2\n}" }
+          }
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access}}" }],
+            "url": { "raw": "{{baseUrl}}/reservations/{{reservationId}}/", "host": ["{{baseUrl}}"], "path": ["reservations", "{{reservationId}}", ""] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reviews",
+      "item": [
+        {
+          "name": "List for cafe",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/cafes/{{cafeId}}/reviews/", "host": ["{{baseUrl}}"], "path": ["cafes", "{{cafeId}}", "reviews", ""] }
+          }
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{baseUrl}}/cafes/{{cafeId}}/reviews/", "host": ["{{baseUrl}}"], "path": ["cafes", "{{cafeId}}", "reviews", ""] },
+            "body": { "mode": "raw", "raw": "{\n  \"rating\": 5,\n  \"text\": \"Amazing!\"\n}" }
+          }
+        },
+        {
+          "name": "Update (mine)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{baseUrl}}/reviews/{{reviewId}}/", "host": ["{{baseUrl}}"], "path": ["reviews", "{{reviewId}}", ""] },
+            "body": { "mode": "raw", "raw": "{\n  \"rating\": 4\n}" }
+          }
+        },
+        {
+          "name": "Delete (mine)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access}}" }],
+            "url": { "raw": "{{baseUrl}}/reviews/{{reviewId}}/", "host": ["{{baseUrl}}"], "path": ["reviews", "{{reviewId}}", ""] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Stats (FBV)",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{baseUrl}}/stats/", "host": ["{{baseUrl}}"], "path": ["stats", ""] }
+      },
+      "response": [
+        {
+          "name": "200 OK",
+          "status": "OK",
+          "code": 200,
+          "body": "{\n  \"cafes_count\": 12,\n  \"reviews_count\": 48,\n  \"reservations_count\": 23,\n  \"avg_rating\": 4.35\n}"
+        }
+      ]
+    }
+  ]
+}

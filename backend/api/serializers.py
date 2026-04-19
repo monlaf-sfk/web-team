@@ -3,7 +3,7 @@ from datetime import date
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from api.models import Cafe, Category, MenuItem, Reservation, Review
+from api.models import Badge, Cafe, Category, MenuItem, Mood, Reservation, Review
 
 User = get_user_model()
 
@@ -15,6 +15,12 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ('id', 'name')
+
+
+class MoodSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Mood
+        fields = ('id', 'slug', 'name', 'emoji')
 
 
 class MenuItemSerializer(serializers.ModelSerializer):
@@ -30,6 +36,14 @@ class CafeSerializer(serializers.ModelSerializer):
         queryset=Category.objects.all(),
         write_only=True,
     )
+    moods = MoodSerializer(many=True, read_only=True)
+    mood_ids = serializers.PrimaryKeyRelatedField(
+        source='moods',
+        queryset=Mood.objects.all(),
+        many=True,
+        write_only=True,
+        required=False,
+    )
     avg_rating = serializers.FloatField(read_only=True, default=None)
     reviews_count = serializers.IntegerField(read_only=True, default=0)
 
@@ -37,7 +51,8 @@ class CafeSerializer(serializers.ModelSerializer):
         model = Cafe
         fields = (
             'id', 'name', 'address', 'description', 'image',
-            'category', 'category_id', 'opens_at', 'closes_at',
+            'category', 'category_id', 'moods', 'mood_ids',
+            'opens_at', 'closes_at',
             'avg_rating', 'reviews_count',
         )
 
@@ -91,6 +106,34 @@ class ReviewSerializer(serializers.ModelSerializer):
         if value < 1 or value > 5:
             raise serializers.ValidationError('Rating must be between 1 and 5.')
         return value
+
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+
+
+class CafeStatsSerializer(serializers.Serializer):
+    cafes_count = serializers.IntegerField()
+    reviews_count = serializers.IntegerField()
+    reservations_count = serializers.IntegerField()
+    avg_rating = serializers.FloatField(allow_null=True)
+
+
+class BadgeStatusSerializer(serializers.Serializer):
+    slug = serializers.CharField()
+    name = serializers.CharField()
+    emoji = serializers.CharField()
+    description = serializers.CharField()
+    threshold = serializers.IntegerField()
+    progress = serializers.IntegerField()
+    earned = serializers.BooleanField()
+
+
+class HourBusynessSerializer(serializers.Serializer):
+    hour = serializers.IntegerField()
+    count = serializers.IntegerField()
+    level = serializers.CharField()
 
 
 class RegisterSerializer(serializers.ModelSerializer):

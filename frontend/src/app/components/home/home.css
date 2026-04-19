@@ -253,3 +253,62 @@
     color: var(--accent2);
     font-size: 16px;
 }
+
+.moods-section {
+    margin: 0 0 24px;
+    text-align: center;
+}
+
+.moods-title {
+    font-size: 14px;
+    color: var(--accent2);
+    margin: 0 0 10px;
+    font-weight: 500;
+    font-family: 'Comfortaa';
+}
+
+.moods-list {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.mood-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border: 2px solid var(--dark_accent);
+    border-radius: 20px;
+    background: var(--primary);
+    color: var(--dark_accent);
+    font-family: 'Comfortaa';
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.mood-chip:hover {
+    transform: translateY(-1px);
+}
+
+.mood-chip.active {
+    background: var(--dark_accent);
+    color: var(--primary);
+}
+
+.mood-emoji {
+    font-size: 15px;
+}
+
+.cafe-moods {
+    display: flex;
+    gap: 6px;
+    margin: 6px 0 10px;
+    font-size: 16px;
+}
+
+.cafe-mood {
+    cursor: help;
+}

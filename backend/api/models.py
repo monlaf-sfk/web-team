@@ -13,6 +13,18 @@ class Category(models.Model):
         return self.name
 
 
+class Mood(models.Model):
+    slug = models.SlugField(max_length=50, unique=True)
+    name = models.CharField(max_length=100)
+    emoji = models.CharField(max_length=8, blank=True)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+
 class Cafe(models.Model):
     name = models.CharField(max_length=200)
     address = models.CharField(max_length=255)
@@ -23,6 +35,7 @@ class Cafe(models.Model):
         on_delete=models.CASCADE,
         related_name='cafes',
     )
+    moods = models.ManyToManyField(Mood, related_name='cafes', blank=True)
     opens_at = models.TimeField(default='09:00')
     closes_at = models.TimeField(default='22:00')
 
@@ -72,6 +85,28 @@ class Review(models.Model):
 
     def __str__(self):
         return f'{self.user} → {self.cafe} ({self.rating})'
+
+
+class Badge(models.Model):
+    RULE_CHOICES = (
+        ('reservations', 'Reservations count'),
+        ('reviews', 'Reviews count'),
+        ('categories', 'Distinct categories visited'),
+        ('favorites', 'Favorites count'),
+    )
+
+    slug = models.SlugField(max_length=50, unique=True)
+    name = models.CharField(max_length=100)
+    emoji = models.CharField(max_length=8, blank=True)
+    description = models.CharField(max_length=200, blank=True)
+    rule_type = models.CharField(max_length=20, choices=RULE_CHOICES)
+    threshold = models.PositiveIntegerField(default=1)
+
+    class Meta:
+        ordering = ['threshold', 'name']
+
+    def __str__(self):
+        return self.name
 
 
 class Reservation(models.Model):

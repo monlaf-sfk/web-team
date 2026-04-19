@@ -29,6 +29,23 @@
     </div>
   </section>
 
+  @if (moods().length) {
+    <section class="moods-section">
+      <h4 class="moods-title">What's the vibe?</h4>
+      <div class="moods-list">
+        @for (mood of moods(); track mood.id) {
+          <button
+            class="mood-chip"
+            [class.active]="isMoodActive(mood.slug)"
+            (click)="toggleMood(mood.slug)">
+            <span class="mood-emoji">{{ mood.emoji }}</span>
+            {{ mood.name }}
+          </button>
+        }
+      </div>
+    </section>
+  }
+
   <section class="cafes-section">
     @if (loading()) {
       <p class="loading">Loading...</p>
@@ -60,6 +77,13 @@
               </div>
               <p class="cafe-address">{{ cafe.address }}</p>
               <p class="cafe-description">{{ cafe.description }}</p>
+              @if (cafe.moods.length) {
+                <div class="cafe-moods">
+                  @for (m of cafe.moods; track m.id) {
+                    <span class="cafe-mood" title="{{ m.name }}">{{ m.emoji }}</span>
+                  }
+                </div>
+              }
               <a [routerLink]="['/cafe', cafe.id]" class="view-btn">View Menu & Book</a>
             </div>
           </div>

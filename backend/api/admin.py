@@ -1,6 +1,12 @@
 from django.contrib import admin
 
-from api.models import Cafe, Category, MenuItem, Reservation, Review
+from api.models import Badge, Cafe, Category, MenuItem, Mood, Reservation, Review
+
+
+@admin.register(Badge)
+class BadgeAdmin(admin.ModelAdmin):
+    list_display = ('id', 'slug', 'name', 'rule_type', 'threshold')
+    search_fields = ('name', 'slug')
 
 
 @admin.register(Category)
@@ -9,11 +15,18 @@ class CategoryAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 
+@admin.register(Mood)
+class MoodAdmin(admin.ModelAdmin):
+    list_display = ('id', 'slug', 'name', 'emoji')
+    search_fields = ('name', 'slug')
+
+
 @admin.register(Cafe)
 class CafeAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'category', 'address')
-    list_filter = ('category',)
+    list_filter = ('category', 'moods')
     search_fields = ('name', 'address')
+    filter_horizontal = ('moods',)
 
 
 @admin.register(MenuItem)

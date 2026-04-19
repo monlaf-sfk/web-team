@@ -393,3 +393,79 @@
         grid-template-columns: 1fr;
     }
 }
+
+.busyness-section {
+    background: var(--primary);
+    border: 2px solid var(--dark_accent);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+}
+
+.busyness-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.busyness-head h2 {
+    margin: 0;
+    color: var(--dark_accent);
+}
+
+.busyness-now {
+    padding: 6px 12px;
+    border-radius: 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--primary);
+    background: #999;
+}
+
+.busyness-now.level-empty { background: #9aa; }
+.busyness-now.level-low { background: #6a9e6a; }
+.busyness-now.level-medium { background: #d9a441; }
+.busyness-now.level-high { background: #c0573b; }
+
+.busyness-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    height: 140px;
+    padding-top: 10px;
+}
+
+.busyness-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+    gap: 4px;
+}
+
+.busyness-bar {
+    width: 100%;
+    border-radius: 4px 4px 0 0;
+    background: #ccc;
+    transition: height 0.3s ease;
+    min-height: 4px;
+}
+
+.busyness-bar.level-empty { background: #dcdcd4; }
+.busyness-bar.level-low { background: #88b988; }
+.busyness-bar.level-medium { background: #e3b463; }
+.busyness-bar.level-high { background: #c66a4d; }
+
+.busyness-hour {
+    font-size: 11px;
+    color: var(--accent2);
+}
+
+.busyness-hint {
+    margin: 10px 0 0;
+    font-size: 12px;
+    color: var(--accent2);
+}

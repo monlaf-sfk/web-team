@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 
 import { CafeService } from '../../services/cafe';
 import { FavoritesService } from '../../services/favorites';
-import { Cafe, Category } from '../../models/cafe';
+import { Cafe, Category, Mood } from '../../models/cafe';
 import { isCafeOpenNow } from '../../utils/open-now';
 
 @Component({
@@ -18,11 +18,13 @@ export class Home implements OnInit {
   protected favorites = inject(FavoritesService);
 
   categories = signal<Category[]>([]);
+  moods = signal<Mood[]>([]);
   cafes = signal<Cafe[]>([]);
   loading = signal<boolean>(true);
   error = signal<string>('');
 
   selectedCategory: number | null = null;
+  selectedMoods = signal<Set<string>>(new Set());
   search = '';
   ordering: '' | '-avg_rating' | 'name' = '';
 
@@ -31,12 +33,31 @@ export class Home implements OnInit {
       next: data => this.categories.set(data),
       error: () => this.error.set('Failed to load categories.'),
     });
+    this.cafeService.getMoods().subscribe({
+      next: data => this.moods.set(data),
+      error: () => {},
+    });
     this.loadCafes();
   }
 
   filterByCategory(categoryId: number): void {
     this.selectedCategory = this.selectedCategory === categoryId ? null : categoryId;
     this.loadCafes();
+  }
+
+  toggleMood(slug: string): void {
+    const next = new Set(this.selectedMoods());
+    if (next.has(slug)) {
+      next.delete(slug);
+    } else {
+      next.add(slug);
+    }
+    this.selectedMoods.set(next);
+    this.loadCafes();
+  }
+
+  isMoodActive(slug: string): boolean {
+    return this.selectedMoods().has(slug);
   }
 
   onSearchChange(): void {
@@ -59,8 +80,9 @@ export class Home implements OnInit {
 
   private loadCafes(): void {
     this.loading.set(true);
+    const moodSlugs = Array.from(this.selectedMoods());
     this.cafeService
-      .getCafes(this.selectedCategory, this.search.trim(), this.ordering || undefined)
+      .getCafes(this.selectedCategory, this.search.trim(), this.ordering || undefined, moodSlugs)
       .subscribe({
         next: data => {
           this.cafes.set(data);

@@ -5,6 +5,7 @@ import { Register } from './components/register/register';
 import { CafeDetail } from './components/cafe-detail/cafe-detail';
 import { MyBookings } from './components/my-bookings/my-bookings';
 import { Favorites } from './components/favorites/favorites';
+import { Badges } from './components/badges/badges';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -13,5 +14,6 @@ export const routes: Routes = [
   { path: 'cafe/:id', component: CafeDetail },
   { path: 'my-bookings', component: MyBookings },
   { path: 'favorites', component: Favorites },
+  { path: 'badges', component: Badges },
   { path: '**', redirectTo: '' },
 ];

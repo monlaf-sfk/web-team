@@ -32,6 +32,26 @@
       </div>
     </section>
 
+    @if (busyness(); as b) {
+      <section class="busyness-section">
+        <div class="busyness-head">
+          <h2>Busyness</h2>
+          <span class="busyness-now" [class]="'level-' + b.current.level">
+            Now: {{ busynessLabel(b.current.level) }}
+          </span>
+        </div>
+        <div class="busyness-chart">
+          @for (h of b.hours; track h.hour) {
+            <div class="busyness-col" title="{{ h.count }} reservations">
+              <div class="busyness-bar" [class]="'level-' + h.level" [style.height.%]="h.count === 0 ? 5 : 20 + h.count * 18"></div>
+              <span class="busyness-hour">{{ h.hour }}</span>
+            </div>
+          }
+        </div>
+        <p class="busyness-hint">Based on past reservations at this cafe.</p>
+      </section>
+    }
+
     <section class="menu-section">
       <h2>Menu</h2>
       <ul class="menu-list">
